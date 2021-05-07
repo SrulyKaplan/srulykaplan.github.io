@@ -1,25 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Isaac's Video Player</title>
-  </head>
-  <body>
-    <form action="" method="post" id="url-setter">
-      <input type="text" name="url" id="url" />
-      <button type="submit" name="submit">Load URL</button>
-    </form>
-    <iframe id="the-frame" width="640" height="480" src=""></iframe>
-    <script type="text/javascript">
-      (function () {
-        "use strict";
-        var url_setter = document.getElementById("url-setter"),
-            url = document.getElementById("url"),
-            the_iframe = document.getElementById("the-frame");
-            url_setter.onsubmit = function (event) {
-            event.preventDefault();
-            the_iframe.src = url.value;
-        };
-      })();
-    </script>
-  </body>
+    <head>
+        <title>Isaac's Video Player</title>
+    </head>
+    <body>
+        <form action="" method="post" id="url-setter">
+            <input type="text" name="url" id="url" />
+            <button type="submit" name="submit">Load URL</button>
+        </form>
+        <iframe
+            id="the-frame"
+            width="560"
+            height="315"
+            src=""
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer;   
+            autoplay; 
+            clipboard-write; 
+            encrypted-media; 
+            gyroscope; 
+            picture-in-picture"
+            allowfullscreen
+        >
+        </iframe>
+        <script type="text/javascript">
+            (function () {
+                "use strict";
+                var url_setter = document.getElementById("url-setter"),
+                    url = document.getElementById("url"),
+                    the_iframe = document.getElementById("the-frame");
+                url_setter.onsubmit = function (event) {
+                    event.preventDefault();
+                    the_iframe.src = url.value;
+                };
+            })();
+        </script>
+    </body>
 </html>
