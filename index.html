@@ -32,7 +32,7 @@
                     the_iframe = document.getElementById("the-frame");
                 url_setter.onsubmit = function (event) {
                     event.preventDefault();
-                    the_iframe.src = url.value;
+                    the_iframe.src = "https://www.youtube.com/embed/" + url.value.split("?v=").pop();
                 };
             })();
         </script>
