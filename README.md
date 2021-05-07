@@ -1,1 +1,0 @@
-# srulykaplan.github.io
