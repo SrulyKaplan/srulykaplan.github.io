@@ -34,6 +34,7 @@
                 url_setter.onsubmit = function (event) {
                     event.preventDefault();
                     the_iframe.src = "https://www.youtube.com/embed/" + url.value.split("?v=").pop();
+                    url.value = " ";
                 };
             })();
         </script>
