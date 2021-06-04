@@ -33,7 +33,7 @@
                     the_iframe = document.getElementById("the-frame");
                 url_setter.onsubmit = function (event) {
                     event.preventDefault();
-                    the_iframe.src = "https://www.youtube.com/embed/" + url.value.split("?v=").pop();
+                    var the_iframe_src = "https://www.youtube.com/embed/" + url.value.split("?v=").pop().substring(0, url.value.split("?v=").pop().indexOf("&"));
                     url.value = "";
                 };
             })();
