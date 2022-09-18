@@ -1,0 +1,299 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Password Protected Page</title>
+    <style>
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        #dialogText {
+            color: white;
+            background-color: #333333;
+        }
+        
+        #dialogWrap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: table;
+            background-color: #EEEEEE;
+        }
+        
+        #dialogWrapCell {
+            display: table-cell;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        #mainDialog {
+            max-width: 400px;
+            margin: 5px;
+            border: solid #AAAAAA 1px;
+            border-radius: 10px;
+            box-shadow: 3px 3px 5px 3px #AAAAAA;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #FFFFFF;
+            overflow: hidden;
+            text-align: left;
+        }
+        #mainDialog > * {
+            padding: 10px 30px;
+        }
+        #passArea {
+            padding: 20px 30px;
+            background-color: white;
+        }
+        #passArea > * {
+            margin: 5px auto;
+        }
+        #pass {
+            width: 100%;
+            height: 40px;
+            font-size: 30px;
+        }
+        
+        #messageWrapper {
+            float: left;
+            vertical-align: middle;
+            line-height: 30px;
+        }
+        
+        .notifyText {
+            display: none;
+        }
+        
+        #invalidPass {
+            color: red;
+        }
+        
+        #success {
+            color: green;
+        }
+        
+        #submitPass {
+            font-size: 20px;
+            border-radius: 5px;
+            background-color: #E7E7E7;
+            border: solid gray 1px;
+            float: right;
+            cursor: pointer;
+        }
+        #contentFrame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #attribution {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 0.8em;
+        }
+        #attribution, #attribution a {
+            color: #999;
+        }
+        .error {
+            display: none;
+            color: red;
+        }
+    </style>
+  </head>
+  <body>
+    <iframe id="contentFrame" frameBorder="0" allowfullscreen></iframe>
+    <div id="dialogWrap">
+        <div id="dialogWrapCell">
+            <div id="mainDialog">
+                <div id="dialogText">This page is password protected.</div>
+                <div id="passArea">
+                    <p id="passwordPrompt">Password</p>
+                    <input id="pass" type="password" name="pass" autofocus>
+                    <div>
+                        <span id="messageWrapper">
+                            <span id="invalidPass" class="error">Sorry, please try again.</span>
+                            <span id="trycatcherror" class="error">Sorry, something went wrong.</span>
+                            <span id="success" class="notifyText">Success!</span>
+                            &nbsp;
+                        </span>
+                        <button id="submitPass" type="button">Submit</button>
+                        <div style="clear: both;"></div>
+                    </div>
+                </div>
+                <div id="securecontext" class="error">
+                    <p>
+                        Sorry, but password protection only works over a secure connection. Please load this page via HTTPS.
+                    </p>
+                </div>
+                <div id="nocrypto" class="error">
+                    <p>
+                        Your web browser appears to be outdated. Please visit this page using a modern browser.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="attribution">
+        Protected by <a href="https://www.maxlaumeister.com/pagecrypt/">PageCrypt</a>
+    </div>
+    <script>
+    (function() {
+
+        var pl = "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";
+        
+        var submitPass = document.getElementById('submitPass');
+        var passEl = document.getElementById('pass');
+        var invalidPassEl = document.getElementById('invalidPass');
+        var trycatcherror = document.getElementById('trycatcherror');
+        var successEl = document.getElementById('success');
+        var contentFrame = document.getElementById('contentFrame');
+        
+        // Sanity checks
+
+        if (pl === "") {
+            submitPass.disabled = true;
+            passEl.disabled = true;
+            alert("This page is meant to be used with the encryption tool. It doesn't work standalone.");
+            return;
+        }
+
+        if (!isSecureContext) {
+            document.querySelector("#passArea").style.display = "none";
+            document.querySelector("#securecontext").style.display = "block";
+            return;
+        }
+
+        if (!crypto.subtle) {
+            document.querySelector("#passArea").style.display = "none";
+            document.querySelector("#nocrypto").style.display = "block";
+            return;
+        }
+        
+        function str2ab(str) {
+            var ustr = atob(str);
+            var buf = new ArrayBuffer(ustr.length);
+            var bufView = new Uint8Array(buf);
+            for (var i=0, strLen=ustr.length; i < strLen; i++) {
+                bufView[i] = ustr.charCodeAt(i);
+            }
+            return bufView;
+        }
+
+        async function deriveKey(salt, password) {
+            const encoder = new TextEncoder()
+            const baseKey = await crypto.subtle.importKey(
+                'raw',
+                encoder.encode(password),
+                'PBKDF2',
+                false,
+                ['deriveKey'],
+            )
+            return await crypto.subtle.deriveKey(
+                { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+                baseKey,
+                { name: 'AES-GCM', length: 256 },
+                true,
+                ['decrypt'],
+            )
+        }
+        
+        async function doSubmit(evt) {
+            submitPass.disabled = true;
+            passEl.disabled = true;
+
+            let iv, ciphertext, key;
+            
+            try {
+                var unencodedPl = str2ab(pl);
+
+                const salt = unencodedPl.slice(0, 32)
+                iv = unencodedPl.slice(32, 32 + 16)
+                ciphertext = unencodedPl.slice(32 + 16)
+
+                key = await deriveKey(salt, passEl.value);
+            } catch (e) {
+                trycatcherror.style.display = "inline";
+                console.error(e);
+                return;
+            }
+
+            try {
+                const decryptedArray = new Uint8Array(
+                    await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext)
+                );
+
+                let decrypted = new TextDecoder().decode(decryptedArray);
+
+                if (decrypted === "") throw "No data returned";
+
+                const basestr = '<base href="." target="_top">';
+                const anchorfixstr = `
+                    <script>
+                        Array.from(document.links).forEach((anchor) => {
+                            const href = anchor.getAttribute("href");
+                            if (href.startsWith("#")) {
+                                anchor.addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    const targetId = this.getAttribute("href").substring(1);
+                                    const targetEl = document.getElementById(targetId);
+                                    targetEl.scrollIntoView();
+                                });
+                            }
+                        });
+                    <\/script>
+                `;
+                
+                // Set default iframe link targets to _top so all links break out of the iframe
+                if (decrypted.includes("<head>")) decrypted = decrypted.replace("<head>", "<head>" + basestr);
+                else if (decrypted.includes("<!DOCTYPE html>")) decrypted = decrypted.replace("<!DOCTYPE html>", "<!DOCTYPE html>" + basestr);
+                else decrypted = basestr + decrypted;
+
+                // Fix fragment links
+                if (decrypted.includes("</body>")) decrypted = decrypted.replace("</body>", anchorfixstr + '</body>');
+                else if (decrypted.includes("</html>")) decrypted = decrypted.replace("</html>", anchorfixstr + '</html>');
+                else decrypted = decrypted + anchorfixstr;
+                
+                contentFrame.srcdoc = decrypted;
+                
+                successEl.style.display = "inline";
+                setTimeout(function() {
+                    dialogWrap.style.display = "none";
+                }, 1000);
+            } catch (e) {
+                invalidPassEl.style.display = "inline";
+                passEl.value = "";
+                submitPass.disabled = false;
+                passEl.disabled = false;
+                console.error(e);
+                return;
+            }
+        }
+        
+        submitPass.onclick = doSubmit;
+        passEl.onkeypress = function(e){
+            if (!e) e = window.event;
+            var keyCode = e.keyCode || e.which;
+            invalidPassEl.style.display = "none";
+            if (keyCode == '13'){
+              // Enter pressed
+              doSubmit();
+              return false;
+            }
+        }
+    })();
+    </script>
+  </body>
+</html>
